@@ -1,25 +1,19 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect } from "react";
+import api from "./api/axios";
 
-function App() {
+const App = () => {
+  useEffect(() => {
+    api.get("/")
+      .then(res => console.log(res.data))
+      .catch(err => console.error(err));
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Developer Learning & Project Tracker</h1>
+      <p>Check console for backend response</p>
     </div>
   );
-}
+};
 
 export default App;
