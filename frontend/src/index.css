@@ -1,6 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: system-ui, sans-serif;
+}
+
+@layer components {
+  .input {
+    @apply w-full px-4 py-2 border rounded-lg 
+    focus:outline-none focus:ring-2 
+    focus:ring-primary border-secondary;
+  }
+
+  .btn-primary {
+    @apply w-full bg-primary text-white py-2 rounded-lg
+    hover:opacity-90 transition;
+  }
+
+  .btn-accent {
+    @apply w-full bg-accent text-gray-800 py-2 rounded-lg
+    hover:opacity-90 transition;
+  }
 }
