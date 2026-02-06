@@ -63,3 +63,6 @@ Extract safe message
 Show it in UI
 ↓
 Never crash app
+
+
+in backend/src/routes/auth.js make signup route -> verifyEmail false when doing actual sending mail

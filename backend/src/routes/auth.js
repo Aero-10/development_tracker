@@ -33,7 +33,8 @@ router.post("/signup",authLimiter, async (req, res) => {
   const user = await User.create({
     email,
     passwordHash,
-    roles: ["user"]
+    roles: ["user"],
+    isEmailVerified: true //make it false when doing verifiaction in real
   });
 
   const accessToken = signAccessToken(user);
