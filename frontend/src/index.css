@@ -9,20 +9,27 @@
   font-family: system-ui, sans-serif;
 }
 
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear,
+input[type="password"]::-webkit-textfield-decoration-container {
+  display: none;
+}
+
 @layer components {
   .input {
-    @apply w-full px-4 py-2 border rounded-lg 
-    focus:outline-none focus:ring-2 
-    focus:ring-primary border-secondary;
+    @apply w-full px-4 py-2 rounded-lg bg-transparent
+    border border-secondary text-white
+    placeholder-gray-400
+    focus:outline-none focus:ring-2 focus:ring-primary;
   }
 
   .btn-primary {
     @apply w-full bg-primary text-white py-2 rounded-lg
-    hover:opacity-90 transition;
+    hover:bg-accent transition;
   }
 
-  .btn-accent {
-    @apply w-full bg-accent text-gray-800 py-2 rounded-lg
-    hover:opacity-90 transition;
+  .btn-outline {
+    @apply w-full border border-secondary text-secondary py-2 rounded-lg
+    hover:bg-secondary hover:text-white transition;
   }
 }

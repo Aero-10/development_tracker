@@ -1,46 +1,93 @@
 import { useState } from "react";
-import { signup } from "../api/auth";
-import { setAccessToken } from "../api/axios";
+import { useAuth } from "../context/AuthContext";
 import AuthLayout from "../components/AuthLayout";
+import PasswordInput from "../components/PasswordInput";
+import { isPasswordValid } from "../utils/passwordRules";
 
 const Signup = ({ switchToLogin }) => {
+  const { signup } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const token = await signup(email, password);
-    setAccessToken(token);
+    setError("");
+    setLoading(true);
+    if (!isPasswordValid(password)) {
+      setError("Password does not meet security requirements");
+      setLoading(false);
+      return;
+    }
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      await signup(email, password);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <AuthLayout title="Create account">
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
-          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="input"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
 
-        <input
-          type="password"
-          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Password"
+        <PasswordInput
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <button className="btn-accent">
-          Sign Up
+        <PasswordInput
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          placeholder="Confirm password"
+        />
+        {confirmPassword && (
+          <p
+            className={`text-xs mt-1 ${
+              password === confirmPassword
+                ? "text-green-400"
+                : "text-red-400"
+            }`}
+          >
+            {password === confirmPassword
+              ? "Passwords match"
+              : "Passwords do not match"}
+          </p>
+        )}
+
+        {/* Error message block */}
+        {error && (
+          <div className="text-sm text-red-400 text-center bg-red-900/30 py-2 rounded-lg">
+            {error}
+          </div>
+        )}
+
+        {/* Button with loading state */}
+        <button className="btn-primary" disabled={loading}>
+          {loading ? "Creating account..." : "Sign Up"}
         </button>
       </form>
 
-      <p className="text-sm text-center mt-4">
+      <p className="text-sm text-center mt-4 text-gray-400">
         Already have an account?{" "}
         <button
           onClick={switchToLogin}
-          className="text-blue-600 hover:underline"
+          className="text-accent hover:underline font-medium"
         >
           Login
         </button>
