@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import authRoutes from "./routes/auth.js";
+import itemsRoutes from "./routes/items.js";
 
 const app = express();
 app.set("trust proxy", 1);
@@ -17,5 +18,6 @@ app.get("/", (req, res) => {
 });
 
 app.use("/auth", authRoutes);
+app.use("/items", itemsRoutes);
 
 export default app;

@@ -1,10 +1,18 @@
 import { useState } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
 
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import VerifyEmail from "./pages/VerifyEmail";
+import { ItemsProvider } from "./context/ItemsContext";
+import Dashboard from "./pages/Dashboard";
+
+const ProtectedRoute = ({ children }) => {
+  const { user } = useAuth();
+  if (!user) return <Navigate to="/" replace />; // redirect to login
+  return <ItemsProvider>{children}</ItemsProvider>;
+};
 
 const App = () => {
   const { user } = useAuth();
@@ -13,12 +21,12 @@ const App = () => {
   return (
     <div className="min-h-screen bg-background text-white">
       <Routes>
-        {/* Email verification route */}
+        {/* Email verification */}
         <Route path="/verify-email" element={<VerifyEmail />} />
 
-        {/* Auth / App route */}
+        {/* Auth routes */}
         <Route
-          path="/*"
+          path="/"
           element={
             !user ? (
               mode === "login" ? (
@@ -27,12 +35,18 @@ const App = () => {
                 <Signup switchToLogin={() => setMode("login")} />
               )
             ) : (
-              <div className="p-8">
-                <h1 className="text-2xl font-bold">
-                  Developer Learning & Project Tracker
-                </h1>
-              </div>
+              <Navigate to="/dashboard" replace />
             )
+          }
+        />
+
+        {/* Dashboard */}
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
           }
         />
       </Routes>
